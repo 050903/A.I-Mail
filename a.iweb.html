@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Thông Tin Cá Nhân - Trần Thế Hảo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Styles */
+    :root {
+      --primary-color: #007bff;
+      --secondary-color: #6c757d;
+      --background-light: #f9f9f9;
+      --text-light: #333;
+      --card-background-light: #ffffff;
+      --border-color-light: #eee;
+
+      --background-dark: #222;
+      --text-dark: #ddd;
+      --card-background-dark: #333;
+      --border-color-dark: #444;
+
+      --shadow-light: rgba(0, 0, 0, 0.1);
+      --shadow-dark: rgba(255, 255, 255, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif; /* Modern font */
+      background: var(--background-light);
+      color: var(--text-light);
+      padding: 20px;
+      line-height: 1.6;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    /* Dark Mode */
+    body.dark-mode {
+      background: var(--background-dark);
+      color: var(--text-dark);
+    }
+
+    body.dark-mode .container {
+      background: var(--card-background-dark);
+      box-shadow: 0 4px 15px var(--shadow-dark);
+      border-color: var(--border-color-dark);
+    }
+
+    body.dark-mode .profile img {
+      border-color: var(--border-color-dark);
+    }
+
+    body.dark-mode button {
+      background: var(--primary-color); /* Keep primary color for dark mode button */
+      color: var(--text-dark);
+    }
+    
+    body.dark-mode button:hover {
+        background: #0056b3; /* Darker primary color on hover */
+    }
+
+    /* Container for overall layout */
+    .container {
+      max-width: 800px; /* Increased max-width for more content */
+      margin: 20px auto;
+      background: var(--card-background-light);
+      border-radius: 10px;
+      box-shadow: 0 4px 15px var(--shadow-light);
+      padding: 30px;
+      border: 1px solid var(--border-color-light);
+      transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+
+    /* Profile Section */
+    .profile {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .profile img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 15px;
+      border: 4px solid var(--primary-color); /* More prominent border */
+      box-shadow: 0 0 0 7px rgba(0, 123, 255, 0.2); /* Subtle glow effect */
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .profile h1 {
+      margin-bottom: 5px;
+      font-size: 2.2rem;
+      color: #222; /* Specific color for name */
+    }
+
+    body.dark-mode .profile h1 {
+        color: var(--text-dark);
+    }
+
+    .profile p {
+      font-size: 1.1rem;
+      color: var(--secondary-color);
+      margin-bottom: 10px;
+    }
+
+    /* Section Headings */
+    h2 {
+      margin-top: 30px;
+      margin-bottom: 15px;
+      font-size: 1.8rem;
+      color: var(--primary-color);
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 8px;
+      text-align: left;
+    }
+
+    body.dark-mode h2 {
+        color: var(--primary-color); /* Keep primary color for dark mode headings */
+        border-bottom-color: var(--primary-color);
+    }
+
+    /* List Styles (Skills, Education, Experience, Projects) */
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 20px;
+    }
+
+    li {
+      padding: 8px 0;
+      border-bottom: 1px dashed var(--border-color-light);
+      font-size: 1.05rem;
+    }
+
+    body.dark-mode li {
+        border-bottom-color: var(--border-color-dark);
+    }
+
+    li:last-child {
+      border-bottom: none;
+    }
+
+    /* Specific Section Styles */
+    .section-content {
+        margin-bottom: 30px;
+    }
+
+    .section-content p {
+        margin-bottom: 10px;
+    }
+
+    .project-item {
+        margin-bottom: 20px;
+        border-left: 4px solid var(--primary-color);
+        padding-left: 15px;
+        background: rgba(0, 123, 255, 0.05); /* Light background for project items */
+        padding: 15px;
+        border-radius: 5px;
+        transition: background 0.3s ease;
+    }
+
+    body.dark-mode .project-item {
+        background: rgba(0, 123, 255, 0.15); /* Darker background for dark mode project items */
+    }
+
+    .project-item:hover {
+        background: rgba(0, 123, 255, 0.1); /* Slightly darker on hover */
+    }
+
+    body.dark-mode .project-item:hover {
+        background: rgba(0, 123, 255, 0.25);
+    }
+
+    .project-item h3 {
+        margin-bottom: 5px;
+        color: var(--primary-color);
+        font-size: 1.3rem;
+    }
+
+    .project-item p {
+        font-size: 0.95rem;
+        margin-bottom: 5px;
+    }
+
+    .project-item a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .project-item a:hover {
+        text-decoration: underline;
+    }
+
+    .contact-info p {
+        margin-bottom: 8px;
+    }
+
+    .contact-info a {
+        color: var(--primary-color);
+        text-decoration: none;
+    }
+
+    .contact-info a:hover {
+        text-decoration: underline;
+    }
+
+    /* Button */
+    button {
+      display: block; /* Make button full width for better click area */
+      width: fit-content; /* Fit content for the button text */
+      margin: 30px auto 0 auto; /* Center the button and add top margin */
+      padding: 12px 25px; /* Larger padding */
+      cursor: pointer;
+      border: none;
+      border-radius: 50px; /* Pill shape */
+      background: var(--primary-color);
+      color: white;
+      font-size: 1.1rem;
+      font-weight: bold;
+      transition: background 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+    }
+
+    button:hover {
+      background: #0056b3;
+      transform: translateY(-2px); /* Slight lift effect */
+      box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .container {
+        margin: 10px;
+        padding: 20px;
+      }
+
+      .profile img {
+        width: 120px;
+        height: 120px;
+      }
+
+      .profile h1 {
+        font-size: 1.8rem;
+      }
+
+      .profile p {
+        font-size: 1rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+        margin-top: 25px;
+        margin-bottom: 10px;
+      }
+
+      li, .project-item p, .contact-info p {
+        font-size: 0.95rem;
+      }
+
+      button {
+        padding: 10px 20px;
+        font-size: 1rem;
+        margin-top: 25px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+
+      .container {
+        padding: 15px;
+        border-radius: 5px;
+      }
+
+      .profile img {
+        width: 100px;
+        height: 100px;
+        border: 3px solid var(--primary-color);
+      }
+
+      .profile h1 {
+        font-size: 1.5rem;
+      }
+
+      .profile p {
+        font-size: 0.9rem;
+      }
+
+      h2 {
+        font-size: 1.3rem;
+        margin-top: 20px;
+        margin-bottom: 8px;
+        border-bottom: 1px solid var(--primary-color);
+        padding-bottom: 5px;
+      }
+
+      li {
+        padding: 6px 0;
+        font-size: 0.9rem;
+      }
+
+      button {
+        width: 100%;
+        margin-top: 20px;
+        padding: 10px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="profile">
+      <img src="htt3d.jpg" alt="Ảnh đại diện" />
+
+      <h1>Trần Thế Hảo</h1>
+      <p>Nghề nghiệp: Sinh viên IT &amp; AI Enthusiast</p>
+      <p>Xin chào! Mình đam mê công nghệ, thích lập trình và khám phá các giải pháp AI.</p>
+    </div>
+
+    <h2>Kỹ năng</h2>
+    <div class="section-content">
+      <ul>
+        <li>Python &amp; Machine Learning (NumPy, Pandas, Scikit-learn, TensorFlow/PyTorch)</li>
+        <li>Web Development (HTML5, CSS3, JavaScript, React basics)</li>
+        <li>Graphic Design (Adobe Illustrator, Photoshop, Figma)</li>
+        <li>SQL &amp; Database Management</li>
+        <li>Version Control (Git &amp; GitHub)</li>
+      </ul>
+    </div>
+
+    <h2>Giáo dục</h2>
+    <div class="section-content">
+      <ul>
+        <li>
+          <strong>Đại học Sư phạm Kỹ thuật TP.HCM</strong> (2022 - Hiện tại)
+          <p>Chuyên ngành: Kỹ thuật Máy tính</p>
+          <p>GPA: 3.5/4.0 (Ước tính)</p>
+        </li>
+        <li>
+          <strong>Trường THPT Chuyên Nguyễn Bỉnh Khiêm</strong> (2019 - 2022)
+          <p>Chuyên Toán</p>
+        </li>
+      </ul>
+    </div>
+
+    <h2>Kinh nghiệm</h2>
+    <div class="section-content">
+      <ul>
+        <li>
+          <strong>Tên Công ty/Tổ chức</strong> | Vị trí (Tháng/Năm - Tháng/Năm)
+          <p>Mô tả ngắn gọn về vai trò và trách nhiệm chính.</p>
+          <ul>
+            <li>Thành tựu hoặc đóng góp đáng kể 1.</li>
+            <li>Thành tựu hoặc đóng góp đáng kể 2.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Tên Công ty/Tổ chức khác</strong> | Vị trí (Tháng/Năm - Tháng/Năm)
+          <p>Mô tả ngắn gọn về vai trò và trách nhiệm chính.</p>
+        </li>
+      </ul>
+    </div>
+
+    <h2>Dự án</h2>
+    <div class="section-content">
+      <div class="project-item">
+        <h3>Dự án A: Hệ thống nhận diện hình ảnh AI</h3>
+        <p>Mô tả: Phát triển một mô hình học sâu sử dụng TensorFlow để nhận diện các đối tượng trong ảnh, đạt độ chính xác 95%.</p>
+        <p>Công nghệ: Python, TensorFlow, Keras, OpenCV</p>
+        <p><a href="https://github.com/yourusername/project-a" target="_blank">Xem trên GitHub</a> | <a href="#" target="_blank">Xem Demo</a></p>
+      </div>
+      <div class="project-item">
+        <h3>Dự án B: Ứng dụng quản lý công việc Web</h3>
+        <p>Mô tả: Xây dựng một ứng dụng web CRUD đơn giản cho phép người dùng quản lý danh sách công việc của họ.</p>
+        <p>Công nghệ: HTML, CSS, JavaScript, Node.js (Express), MongoDB</p>
+        <p><a href="https://github.com/yourusername/project-b" target="_blank">Xem trên GitHub</a></p>
+      </div>
+    </div>
+
+    <h2>Liên hệ</h2>
+    <div class="section-content contact-info">
+      <p>Email: <a href="mailto:haotran@example.com">haotran@example.com</a></p>
+      <p>Điện thoại: (+84) 123 456 789</p>
+      <p>LinkedIn: <a href="https://www.linkedin.com/in/yourprofile" target="_blank">linkedin.com/in/yourprofile</a></p>
+      <p>GitHub: <a href="https://github.com/yourusername" target="_blank">github.com/yourusername</a></p>
+      <p>Địa chỉ: TP. Hồ Chí Minh, Việt Nam</p>
+    </div>
+
+    <button id="toggleTheme">Chuyển Dark Mode</button>
+  </div>
+
+  <script>
+    const btn = document.getElementById('toggleTheme');
+    btn.addEventListener('click', function() {
+      document.body.classList.toggle('dark-mode');
+      // Save theme preference to localStorage
+      if (document.body.classList.contains('dark-mode')) {
+        localStorage.setItem('theme', 'dark');
+      } else {
+        localStorage.setItem('theme', 'light');
+      }
+    });
+
+    // Load theme preference on page load
+    document.addEventListener('DOMContentLoaded', (event) => {
+      if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+  </script>
+</body>
+</html>

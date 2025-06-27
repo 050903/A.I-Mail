@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Programming Assistant</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+      width: 100%;
+      max-width: 800px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .header {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      padding: 24px 32px;
+      color: white;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header p {
+      font-size: 16px;
+      opacity: 0.9;
+      position: relative;
+      z-index: 1;
+    }
+
+    .chat-section {
+      padding: 32px;
+    }
+
+    .chat-container {
+      background: #f8fafc;
+      border-radius: 16px;
+      height: 400px;
+      overflow-y: auto;
+      padding: 20px;
+      margin-bottom: 24px;
+      border: 1px solid #e2e8f0;
+      position: relative;
+      scroll-behavior: smooth;
+    }
+
+    .chat-container::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .chat-container::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 3px;
+    }
+
+    .chat-container::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+
+    .chat-container::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    .message {
+      margin-bottom: 20px;
+      animation: slideIn 0.3s ease-out;
+      opacity: 0;
+      animation-fill-mode: forwards;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .user-message {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .user-message .message-content {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 12px 18px;
+      border-radius: 20px 20px 4px 20px;
+      max-width: 80%;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .ai-message {
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .ai-message .message-content {
+      background: white;
+      color: #334155;
+      padding: 12px 18px;
+      border-radius: 20px 20px 20px 4px;
+      max-width: 80%;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e2e8f0;
+    }
+
+    .message-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 12px;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .user-avatar {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .ai-avatar {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white;
+    }
+
+    .input-section {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .input-wrapper {
+      flex: 1;
+      position: relative;
+    }
+
+    .message-input {
+      width: 100%;
+      padding: 16px 20px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 16px;
+      background: white;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    .message-input:focus {
+      border-color: #4facfe;
+      box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+    }
+
+    .send-btn {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 16px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(79, 172, 254, 0.3);
+    }
+
+    .send-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(79, 172, 254, 0.4);
+    }
+
+    .send-btn:active {
+      transform: translateY(0);
+    }
+
+    .email-section {
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .email-section h3 {
+      color: #334155;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .email-input-section {
+      display: flex;
+      gap: 12px;
+    }
+
+    .email-input {
+      flex: 1;
+      padding: 14px 18px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 16px;
+      background: white;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    .email-input:focus {
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    .email-btn {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .email-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .loading {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #64748b;
+      font-style: italic;
+    }
+
+    .loading-dots {
+      display: flex;
+      gap: 4px;
+    }
+
+    .loading-dot {
+      width: 6px;
+      height: 6px;
+      background: #64748b;
+      border-radius: 50%;
+      animation: bounce 1.4s infinite ease-in-out both;
+    }
+
+    .loading-dot:nth-child(1) { animation-delay: -0.32s; }
+    .loading-dot:nth-child(2) { animation-delay: -0.16s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% {
+        transform: scale(0);
+      }
+      40% {
+        transform: scale(1);
+      }
+    }
+
+    .empty-state {
+      text-align: center;
+      color: #64748b;
+      font-size: 16px;
+      padding: 40px 20px;
+    }
+
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        margin: 10px;
+        border-radius: 16px;
+      }
+      
+      .chat-section {
+        padding: 20px;
+      }
+      
+      .input-section,
+      .email-input-section {
+        flex-direction: column;
+      }
+      
+      .header {
+        padding: 20px;
+      }
+      
+      .header h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🤖 AI Programming Assistant</h1>
+      <p>Hỗ trợ học lập trình thông minh với AI</p>
+    </div>
+
+    <div class="chat-section">
+      <div class="chat-container" id="chat-container">
+        <div class="empty-state">
+          <div class="empty-state-icon">💬</div>
+          <p>Chào bạn! Tôi là trợ lý AI chuyên về lập trình.<br>Hãy đặt câu hỏi để bắt đầu cuộc trò chuyện!</p>
+        </div>
+      </div>
+
+      <div class="input-section">
+        <div class="input-wrapper">
+          <input 
+            type="text" 
+            id="user-input" 
+            class="message-input"
+            placeholder="Nhập câu hỏi về lập trình..."
+            maxlength="500"
+          >
+        </div>
+        <button id="send-btn" class="send-btn">
+          <span id="send-text">Gửi</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="email-section">
+      <h3>📧 Gửi cuộc trò chuyện qua email</h3>
+      <div class="email-input-section">
+        <input 
+          type="email" 
+          id="email-input" 
+          class="email-input"
+          placeholder="Nhập địa chỉ email của bạn..."
+        >
+        <button id="email-btn" class="email-btn">
+          <span id="email-text">Gửi Email</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+  <script>
+    const OPENAI_API_KEY = 'REMOVED ';
+    const EMAILJS_PUBLIC_KEY = "aamzcLo6Aj8vlRMPr";
+    const EMAILJS_SERVICE_ID = "service_cci6rwj";
+    const EMAILJS_TEMPLATE_ID = "template_0c8getg";
+
+    // Initialize EmailJS
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+
+    let conversation = [];
+    let isFirstMessage = true;
+
+    const chatContainer = document.getElementById('chat-container');
+    const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
+    const emailInput = document.getElementById('email-input');
+    const emailBtn = document.getElementById('email-btn');
+
+    function clearEmptyState() {
+      if (isFirstMessage) {
+        chatContainer.innerHTML = '';
+        isFirstMessage = false;
+      }
+    }
+
+    function addMessage(role, content, isLoading = false) {
+      clearEmptyState();
+      
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${role === 'user' ? 'user-message' : 'ai-message'}`;
+      
+      const avatar = document.createElement('div');
+      avatar.className = `message-avatar ${role === 'user' ? 'user-avatar' : 'ai-avatar'}`;
+      avatar.textContent = role === 'user' ? '👤' : '🤖';
+      
+      const contentDiv = document.createElement('div');
+      contentDiv.className = 'message-content';
+      
+      if (isLoading) {
+        contentDiv.innerHTML = `
+          <div class="loading">
+            <span>AI đang suy nghĩ</span>
+            <div class="loading-dots">
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+            </div>
+          </div>
+        `;
+      } else {
+        contentDiv.textContent = content;
+      }
+      
+      if (role === 'user') {
+        messageDiv.appendChild(contentDiv);
+        messageDiv.appendChild(avatar);
+      } else {
+        messageDiv.appendChild(avatar);
+        messageDiv.appendChild(contentDiv);
+      }
+      
+      chatContainer.appendChild(messageDiv);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+      
+      return contentDiv;
+    }
+
+    async function sendMessage() {
+      const text = userInput.value.trim();
+      if (!text || sendBtn.disabled) return;
+
+      // Add user message
+      addMessage('user', text);
+      conversation.push({ role: 'user', content: text });
+      
+      // Clear input and disable button
+      userInput.value = '';
+      sendBtn.disabled = true;
+      sendBtn.innerHTML = '<span>Đang gửi...</span>';
+
+      // Show loading message
+      const loadingContent = addMessage('assistant', '', true);
+
+      try {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${OPENAI_API_KEY}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            model: 'gpt-3.5-turbo',
+            messages: [
+              {
+                role: 'system',
+                content: 'Bạn là một trợ lý AI chuyên về lập trình. Hãy trả lời các câu hỏi về lập trình một cách chi tiết, dễ hiểu và hữu ích. Trả lời bằng tiếng Việt.'
+              },
+              ...conversation
+            ],
+            max_tokens: 1000,
+            temperature: 0.7
+          })
+        });
+
+        const data = await response.json();
+        const reply = data.choices?.[0]?.message?.content || 'Xin lỗi, tôi không thể trả lời câu hỏi này lúc này.';
+        
+        // Update loading message with actual response
+        loadingContent.textContent = reply;
+        conversation.push({ role: 'assistant', content: reply });
+
+      } catch (error) {
+        console.error('Error calling OpenAI:', error);
+        loadingContent.innerHTML = '❌ <em>Có lỗi xảy ra khi gọi API. Vui lòng thử lại sau.</em>';
+      } finally {
+        // Re-enable button
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = '<span>Gửi</span>';
+        userInput.focus();
+      }
+    }
+
+    async function sendEmail() {
+      const email = emailInput.value.trim();
+      if (!email) {
+        alert('❗ Vui lòng nhập địa chỉ email.');
+        return;
+      }
+
+      if (conversation.length === 0) {
+        alert('❗ Chưa có cuộc trò chuyện nào để gửi.');
+        return;
+      }
+
+      emailBtn.disabled = true;
+      emailBtn.innerHTML = '<span>Đang gửi...</span>';
+
+      const chatTranscript = conversation.map(msg => 
+        `${msg.role === 'user' ? '👤 Bạn' : '🤖 AI'}: ${msg.content}`
+      ).join('\n\n');
+
+      try {
+        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+          to_email: email,
+          message: chatTranscript,
+          subject: 'Cuộc trò chuyện với AI Programming Assistant'
+        });
+        
+        alert('✅ Đã gửi cuộc trò chuyện về email thành công!');
+        emailInput.value = '';
+      } catch (error) {
+        console.error('Error sending email:', error);
+        alert('❌ Có lỗi xảy ra khi gửi email. Vui lòng thử lại.');
+      } finally {
+        emailBtn.disabled = false;
+        emailBtn.innerHTML = '<span>Gửi Email</span>';
+      }
+    }
+
+    // Event listeners
+    sendBtn.addEventListener('click', sendMessage);
+    emailBtn.addEventListener('click', sendEmail);
+
+    userInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    emailInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        sendEmail();
+      }
+    });
+
+    // Auto-focus on input
+    userInput.focus();
+  </script>
+</body>
+</html>

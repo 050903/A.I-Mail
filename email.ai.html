@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Chatbot AI + EmailJS v4 không module</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px auto;
+      max-width: 700px;
+    }
+    #chat-box {
+      border: 1px solid #ccc;
+      padding: 15px;
+      height: 300px;
+      overflow-y: auto;
+      background: #f8f8f8;
+      margin-bottom: 10px;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>💬 Chatbot AI hỗ trợ học lập trình</h2>
+  <div id="chat-box"></div>
+  <input type="text" id="user-input" placeholder="Nhập câu hỏi của bạn...">
+  <button id="send-btn">Gửi câu hỏi</button>
+
+  <h3>📧 Gửi email toàn bộ đoạn chat</h3>
+  <input type="email" id="email" placeholder="Nhập email của bạn">
+  <button id="email-btn">Gửi đoạn chat qua email</button>
+
+  <!-- ✅ Import EmailJS SDK v4 (UMD - không cần type=module) -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+  <script>
+ const OPENAI_API_KEY = 'REMOVED ';
+    const EMAILJS_PUBLIC_KEY = "aamzcLo6Aj8vlRMPr"; // 🔑 EmailJS Public Key
+    const EMAILJS_SERVICE_ID = "service_cci6rwj";         // 📧 EmailJS Service ID
+    const EMAILJS_TEMPLATE_ID = "template_0c8getg";       // 📧 EmailJS Template ID
+
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+
+    let conversation = [];
+
+    function addToChat(role, content) {
+      const chatBox = document.getElementById("chat-box");
+      const div = document.createElement("div");
+      div.innerHTML = `<strong>${role === "user" ? "👤 Bạn" : "🤖 AI"}:</strong> ${content}`;
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById("user-input");
+      const text = input.value.trim();
+      if (!text) return;
+
+      addToChat("user", text);
+      conversation.push({ role: "user", content: text });
+      input.value = "";
+
+      try {
+        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${OPENAI_API_KEY}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages: conversation
+          })
+        });
+
+        const data = await response.json();
+const reply = data.choices?.[0]?.message?.content || "(Không có phản hồi)";
+        addToChat("assistant", reply);
+        conversation.push({ role: "assistant", content: reply });
+      } catch (err) {
+        console.error("Lỗi gọi OpenAI:", err);
+        addToChat("assistant", "(❌ Lỗi khi gọi OpenAI)");
+      }
+    }
+
+    async function sendTranscript() {
+      const email = document.getElementById("email").value.trim();
+      if (!email) {
+        alert("❗ Vui lòng nhập email.");
+        return;
+      }
+
+      const fullChat = conversation.map(
+        msg => `${msg.role === "user" ? "Bạn" : "AI"}: ${msg.content}`
+      ).join("\n\n");
+
+      try {
+        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+          to_email: email,
+          message: fullChat
+        });
+        alert("✅ Đã gửi đoạn chat về email!");
+      } catch (err) {
+        console.error("Lỗi khi gửi email:", err);
+        alert("❌ Gửi email thất bại.");
+      }
+    }
+
+    // Gắn sự kiện khi DOM đã có
+    window.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("send-btn").addEventListener("click", sendMessage);
+      document.getElementById("email-btn").addEventListener("click", sendTranscript);
+    });
+  </script>
+</body>
+</html>

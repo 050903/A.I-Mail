@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phần Tính năng Hiện đại</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Icon library (Phosphor Icons for illustrative purposes) -->
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/dist/phosphor.js"></script>
+    <style>
+        /* Global Styles & Variables */
+        :root {
+            --primary-color: #4c51bf; /* Deep Purple */
+            --secondary-color: #6366f1; /* Medium Purple */
+            --text-color-dark: #1f2937; /* Dark Gray */
+            --text-color-light: #f9fafb; /* Off-white */
+            --bg-light: #f9fafb; /* Very Light Gray */
+            --bg-dark: #111827; /* Dark Blue-Gray */
+            --card-bg-light: #ffffff;
+            --card-bg-dark: #1f2937;
+            --border-light: #e5e7eb;
+            --border-dark: #374151;
+            --shadow-light: rgba(0, 0, 0, 0.05);
+            --shadow-dark: rgba(0, 0, 0, 0.3);
+            --success-color: #28a745; /* Added for status messages */
+            --error-color: #dc3545; /* Added for status messages */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-color-dark);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            background-color: var(--bg-dark);
+            color: var(--text-color-light);
+        }
+
+        body.dark-mode .container,
+        body.dark-mode .feature-card {
+            background-color: var(--card-bg-dark);
+            border-color: var(--border-dark);
+            box-shadow: 0 10px 25px var(--shadow-dark);
+        }
+
+        body.dark-mode .feature-card h3 {
+            color: var(--secondary-color);
+        }
+
+        body.dark-mode .feature-card p {
+            color: #d1d5db; /* Lighter text for dark mode */
+        }
+
+        body.dark-mode .feature-card .icon-wrapper {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        body.dark-mode .toggle-theme-button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: 1px solid var(--primary-color);
+        }
+        body.dark-mode .toggle-theme-button:hover {
+            background-color: #5b21b6;
+        }
+
+        /* Dark Mode for Form Elements */
+        body.dark-mode .contact-form-section h2 {
+            color: var(--secondary-color); /* Match feature card h3 */
+        }
+
+        body.dark-mode .contact-form-section label {
+            color: var(--text-color-light);
+        }
+
+        body.dark-mode .contact-form-section input[type="text"],
+        body.dark-mode .contact-form-section input[type="email"],
+        body.dark-mode .contact-form-section textarea {
+            background-color: #2b3a4d; /* Darker input background */
+            border-color: var(--border-dark);
+            color: var(--text-color-light);
+        }
+
+        body.dark-mode .contact-form-section input[type="text"]:focus,
+        body.dark-mode .contact-form-section input[type="email"]:focus,
+        body.dark-mode .contact-form-section textarea:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        body.dark-mode #send-button {
+            background-color: var(--secondary-color);
+            color: white;
+            box-shadow: 0 2px 5px rgba(99, 102, 241, 0.2);
+        }
+
+        body.dark-mode #send-button:hover {
+            background-color: #5b21b6;
+        }
+
+        body.dark-mode .status-message.success {
+            background: #2b6a3b; /* Darker success background */
+            color: #d4edda;
+            border-color: #28a745;
+        }
+
+        body.dark-mode .status-message.error {
+            background: #8b2b3a; /* Darker error background */
+            color: #f8d7da;
+            border-color: #dc3545;
+        }
+
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background-color: var(--card-bg-light);
+            border-radius: 12px;
+            box-shadow: 0 8px 20px var(--shadow-light);
+            padding: 40px;
+            border: 1px solid var(--border-light);
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-header h2::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            color: var(--text-color-dark);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        body.dark-mode .section-header p {
+            color: #cbd5e1;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px; /* Add margin below grid */
+        }
+
+        .feature-card {
+            background-color: var(--card-bg-light);
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 12px var(--shadow-light);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px var(--shadow-light);
+        }
+
+        body.dark-mode .feature-card:hover {
+            box-shadow: 0 12px 25px var(--shadow-dark);
+        }
+
+        .icon-wrapper {
+            width: 70px;
+            height: 70px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-shrink: 0; /* Prevent icon from shrinking */
+            color: white;
+            font-size: 2.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-card h3 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            flex-grow: 1; /* Allow title to take space */
+        }
+
+        .feature-card p {
+            font-size: 1rem;
+            color: #6b7280; /* Medium gray for description */
+            line-height: 1.7;
+        }
+
+        .toggle-theme-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease, border-color 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .toggle-theme-button:hover {
+            background-color: #3b3f8f;
+            transform: translateY(-2px);
+        }
+
+        /* Styles for the new Contact Form section */
+        .contact-form-section {
+            padding: 40px 0; /* Vertical padding */
+            text-align: center;
+        }
+
+        .contact-form-section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .contact-form-section h2::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        #contact-form {
+            max-width: 600px; /* Adjust form width */
+            margin: 0 auto;
+            text-align: left; /* Align form labels/inputs to left */
+            padding: 30px;
+            border-radius: 10px;
+            background-color: var(--card-bg-light); /* Match container background */
+            border: 1px solid var(--border-light);
+            box-shadow: 0 4px 15px var(--shadow-light);
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        body.dark-mode #contact-form {
+            background-color: var(--card-bg-dark);
+            border-color: var(--border-dark);
+            box-shadow: 0 4px 15px var(--shadow-dark);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--text-color-dark); /* Use feature section text color */
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-light); /* Use theme border color */
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+            outline: none;
+            background-color: var(--bg-light); /* Match light theme background for inputs */
+            color: var(--text-color-dark);
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(76, 81, 191, 0.2); /* Use primary color for focus glow */
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px; /* Slightly taller textarea */
+        }
+
+        #send-button {
+            display: block;
+            width: 100%;
+            padding: 14px 20px; /* Slightly larger button */
+            border: none;
+            border-radius: 8px;
+            background: var(--primary-color);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* More prominent shadow */
+        }
+
+        #send-button:hover {
+            background: #3b3f8f; /* Darker primary on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #send-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-message {
+            margin-top: 25px; /* More space */
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            display: none; /* Hidden by default */
+        }
+
+        .status-message.success {
+            background: #d4edda;
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+
+        .status-message.error {
+            background: #f8d7da;
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
+        }
+
+        /* Responsive adjustments for overall layout */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            .container {
+                padding: 30px;
+            }
+            .section-header h2 {
+                font-size: 2.2rem;
+            }
+            .section-header p {
+                font-size: 1rem;
+            }
+            .features-grid {
+                grid-template-columns: 1fr; /* Single column on smaller screens */
+            }
+            .feature-card {
+                padding: 25px;
+            }
+            .feature-card h3 {
+                font-size: 1.4rem;
+            }
+            .feature-card p {
+                font-size: 0.95rem;
+            }
+            .toggle-theme-button {
+                top: 15px;
+                right: 15px;
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+            .contact-form-section h2 {
+                font-size: 2rem;
+            }
+            #contact-form {
+                padding: 20px;
+            }
+            input, textarea, #send-button {
+                padding: 10px;
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            .section-header {
+                margin-bottom: 30px;
+            }
+            .section-header h2 {
+                font-size: 1.8rem;
+            }
+            .icon-wrapper {
+                width: 60px;
+                height: 60px;
+                font-size: 2rem;
+                margin-bottom: 15px;
+            }
+            .contact-form-section h2 {
+                font-size: 1.8rem;
+            }
+            #contact-form {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button id="toggleTheme" class="toggle-theme-button">Chuyển Dark Mode</button>
+
+    <div class="container">
+        <div class="section-header">
+            <h2>Các Tính Năng Nổi Bật</h2>
+            <p>Khám phá những điểm mạnh độc đáo làm cho sản phẩm của chúng tôi nổi bật. Chúng tôi đã xây dựng các giải pháp để tối ưu hóa trải nghiệm của bạn.</p>
+        </div>
+
+        <div class="features-grid">
+            <!-- Feature Card 1 -->
+            <div class="feature-card">
+                <div class="icon-wrapper">
+                    <i class="ph ph-lightning"></i>
+                </div>
+                <h3>Hiệu Suất Vượt Trội</h3>
+                <p>Tận hưởng tốc độ và hiệu suất đáng kinh ngạc, được tối ưu hóa để xử lý mọi tác vụ một cách mượt mà và hiệu quả.</p>
+            </div>
+
+            <!-- Feature Card 2 -->
+            <div class="feature-card">
+                <div class="icon-wrapper">
+                    <i class="ph ph-lock-key"></i>
+                </div>
+                <h3>Bảo Mật Tối Đa</h3>
+                <p>Dữ liệu của bạn luôn an toàn với các lớp bảo mật tiên tiến, đảm bảo sự riêng tư và bảo vệ khỏi mọi mối đe dọa.</p>
+            </div>
+
+            <!-- Feature Card 3 -->
+            <div class="feature-card">
+                <div class="icon-wrapper">
+                    <i class="ph ph-paint-brush"></i>
+                </div>
+                <h3>Thiết Kế Trực Quan</h3>
+                <p>Giao diện người dùng được thiết kế tỉ mỉ, dễ sử dụng, mang lại trải nghiệm tương tác mượt mà và thú vị.</p>
+            </div>
+            <!-- Feature Card 4 (Updated for Email Sending) -->
+            <div class="feature-card">
+                <div class="icon-wrapper">
+                    <i class="ph ph-envelope-simple"></i> <!-- Changed Icon -->
+                </div>
+                <h3>Gửi Email Tự Động</h3> <!-- Changed Title -->
+                <p>Tự động hóa việc gửi email cho thông báo, chiến dịch marketing, hoặc phản hồi khách hàng, giúp bạn tiết kiệm thời gian và công sức.</p> <!-- Changed Description -->
+            </div>
+
+            <!-- Feature Card 5 -->
+            <div class="feature-card">
+                <div class="icon-wrapper">
+                    <i class="ph ph-trend-up"></i>
+                </div>
+                <h3>Tối Ưu Hóa Tăng Trưởng</h3>
+                <p>Các công cụ và tính năng được thiết kế để giúp bạn phát triển, đạt được mục tiêu và mở rộng tiềm năng.</p>
+            </div>
+
+            <!-- Feature Card 6 -->
+            <div class="icon-wrapper">
+                <i class="ph ph-globe-hemisphere-east"></i>
+            </div>
+            <h3>Khả Năng Toàn Cầu</h3>
+            <p>Sản phẩm của chúng tôi được xây dựng để hoạt động hiệu quả trên toàn thế giới, hỗ trợ đa ngôn ngữ và múi giờ.</p>
+        </div>
+
+        <!-- NEW: Contact Form Section -->
+        <div class="contact-form-section">
+            <h2>Gửi Email Liên Hệ</h2>
+            <form id="contact-form">
+                <div class="form-group">
+                    <label for="name">Tên của bạn:</label>
+                    <input type="text" id="name" name="from_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email của bạn:</label>
+                    <input type="email" id="email" name="from_email" required>
+                </div>
+                <div class="form-group">
+                    <label for="subject">Chủ đề:</label>
+                    <input type="text" id="subject" name="subject" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Nội dung tin nhắn:</label>
+                    <textarea id="message" name="message" required></textarea>
+                </div>
+                <button type="submit" id="send-button">Gửi Email</button>
+                <div id="status-message" class="status-message"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.emailjs.com/sdk/3.2.0/email.min.js"></script>
+    <script type="text/javascript">
+        // Theme Toggle functionality
+        const toggleThemeButton = document.getElementById('toggleTheme');
+        toggleThemeButton.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const currentTheme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+            localStorage.setItem('theme', currentTheme);
+            toggleThemeButton.textContent = currentTheme === 'dark' ? 'Chuyển Light Mode' : 'Chuyển Dark Mode';
+        });
+
+        // Hàm kiểm tra và khởi tạo EmailJS cùng form
+        function initEmailJSAndForm() {
+            // Kiểm tra xem 'emailjs' đã được định nghĩa chưa
+            if (typeof emailjs !== 'undefined') {
+                // Khởi tạo EmailJS với User ID của bạn
+                emailjs.init("FTv8b_dsIphOTiJ24"); // User ID đã được cung cấp
+
+                // Thiết lập trình nghe sự kiện cho form
+                document.getElementById('contact-form').addEventListener('submit', function(event) {
+                    event.preventDefault(); // Ngăn chặn form gửi đi theo cách mặc định
+
+                    const sendButton = document.getElementById('send-button');
+                    const statusMessage = document.getElementById('status-message');
+
+                    // Hiển thị trạng thái đang gửi
+                    statusMessage.style.display = 'block';
+                    statusMessage.className = 'status-message'; // Reset class
+                    statusMessage.textContent = 'Đang gửi email...';
+                    sendButton.disabled = true; // Vô hiệu hóa nút gửi
+
+                    // Lấy dữ liệu từ form
+                    const formData = new FormData(this);
+                    const templateParams = {
+                        from_name: formData.get('from_name'),
+                        from_email: formData.get('from_email'),
+                        subject: formData.get('subject'),
+                        message: formData.get('message'),
+                        time: new Date().toLocaleString() // Thêm thời gian hiện tại
+                    };
+
+                    // Gửi email
+                    // Service ID: service_b9f810r
+                    // Template ID: template_igoaap8
+                    emailjs.send('service_b9f810r', 'template_igoaap8', templateParams)
+                        .then(function() {
+                            statusMessage.className = 'status-message success';
+                            statusMessage.textContent = 'Email đã được gửi thành công!';
+                            document.getElementById('contact-form').reset(); // Xóa các trường trong form
+                        }, function(error) {
+                            statusMessage.className = 'status-message error';
+                            statusMessage.textContent = 'Gửi email thất bại. Lỗi: ' + JSON.stringify(error);
+                            console.error('Lỗi khi gửi email:', error);
+                        })
+                        .finally(function() {
+                            sendButton.disabled = false; // Kích hoạt lại nút gửi
+                        });
+                });
+            } else {
+                // Nếu 'emailjs' chưa định nghĩa, thử lại sau một khoảng thời gian ngắn
+                console.log("EmailJS SDK chưa tải xong, thử lại sau...");
+                setTimeout(initEmailJSAndForm, 500); // Thử lại sau 500ms
+            }
+        }
+
+        // Gọi hàm khởi tạo khi toàn bộ trang và tài nguyên đã tải xong
+        // Đảm bảo window.onload chỉ chạy một lần và sau khi mọi thứ sẵn sàng.
+        window.onload = function() {
+            // Tải tùy chọn theme
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+                toggleThemeButton.textContent = 'Chuyển Light Mode';
+            } else {
+                toggleThemeButton.textContent = 'Chuyển Dark Mode';
+            }
+
+            // Bắt đầu khởi tạo EmailJS và form bằng hàm kiểm tra
+            initEmailJSAndForm();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Bảng Tổng Hợp Website</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      background: #f7f7fa;
+      margin: 0;
+      padding: 0;
+    }
+    .summary-table {
+      width: 98%;
+      margin: 24px auto;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .summary-table th, .summary-table td {
+      padding: 18px 14px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+      vertical-align: top;
+    }
+    .summary-table th {
+      background: #4c51bf;
+      color: #fff;
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+    }
+    .accordion-btn {
+      background: #6366f1;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 18px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-bottom: 8px;
+      transition: background 0.2s;
+    }
+    .accordion-btn:hover {
+      background: #4c51bf;
+    }
+    .page-section {
+      display: none;
+      animation: fadeIn 0.3s;
+      background: #f8fafd;
+      border-radius: 8px;
+      margin-top: 6px;
+      padding: 16px 10px;
+      box-shadow: 0 2px 8px rgba(76,81,191,0.06);
+      overflow-x: auto;
+    }
+    .page-section.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    /* Responsive */
+    @media (max-width: 800px) {
+      .summary-table th, .summary-table td { padding: 10px 4px; }
+      .page-section { padding: 8px 2px; }
+    }
+    /* Đảm bảo style của từng trang không ảnh hưởng lẫn nhau */
+    .iframe-container {
+      width: 100%;
+      min-height: 600px;
+      border: none;
+      background: transparent;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="text-align:center; color:#4c51bf; margin-top:24px;">Bảng Tổng Hợp Website</h1>
+  <table class="summary-table">
+    <tr>
+      <th>Tên Trang</th>
+      <th>Nội dung đầy đủ (Thu gọn/Mở rộng)</th>
+    </tr>
+    <!-- Repeat for each page -->
+    <tr>
+      <td>a.iweb.html</td>
+      <td>
+        <button class="accordion-btn" onclick="toggleSection('section-aiweb')">Thu gọn/Mở rộng</button>
+        <div class="page-section" id="section-aiweb">
+          <!-- Nhúng nội dung đầy đủ của a.iweb.html -->
+          <iframe class="iframe-container" src="a.iweb.html"></iframe>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>aimeil.html</td>
+      <td>
+        <button class="accordion-btn" onclick="toggleSection('section-aimeil')">Thu gọn/Mở rộng</button>
+        <div class="page-section" id="section-aimeil">
+          <iframe class="iframe-container" src="aimeil.html"></iframe>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>email.ai.html</td>
+      <td>
+        <button class="accordion-btn" onclick="toggleSection('section-emailai')">Thu gọn/Mở rộng</button>
+        <div class="page-section" id="section-emailai">
+          <iframe class="iframe-container" src="email.ai.html"></iframe>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>email.html</td>
+      <td>
+        <button class="accordion-btn" onclick="toggleSection('section-email')">Thu gọn/Mở rộng</button>
+        <div class="page-section" id="section-email">
+          <iframe class="iframe-container" src="email.html"></iframe>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>emailup.html</td>
+      <td>
+        <button class="accordion-btn" onclick="toggleSection('section-emailup')">Thu gọn/Mở rộng</button>
+        <div class="page-section" id="section-emailup">
+          <iframe class="iframe-container" src="emailup.html"></iframe>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>mychatbot.html</td>
+      <td>
+        <button class="accordion-btn" onclick="toggleSection('section-mychatbot')">Thu gọn/Mở rộng</button>
+        <div class="page-section" id="section-mychatbot">
+          <iframe class="iframe-container" src="mychatbot.html"></iframe>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>webai.html</td>
+      <td>
+        <button class="accordion-btn" onclick="toggleSection('section-webai')">Thu gọn/Mở rộng</button>
+        <div class="page-section" id="section-webai">
+          <iframe class="iframe-container" src="webai.html"></iframe>
+        </div>
+      </td>
+    </tr>
+  </table>
+  <script>
+    function toggleSection(id) {
+      var section = document.getElementById(id);
+      if (section.classList.contains('active')) {
+        section.classList.remove('active');
+      } else {
+        // Đóng các section khác
+        document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+        section.classList.add('active');
+      }
+    }
+  </script>
+</body>
+</html>

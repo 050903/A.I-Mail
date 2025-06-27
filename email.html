@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gửi Email Tự Động với EmailJS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        :root {
+            --primary-color: #007bff;
+            --background-light: #f4f7f6;
+            --text-light: #333;
+            --card-background: #ffffff;
+            --border-color: #dee2e6;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --success-color: #28a745;
+            --error-color: #dc3545;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--background-light);
+            color: var(--text-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: var(--card-background);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px var(--shadow);
+            padding: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        h2 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            outline: none;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background: var(--primary-color);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
+        }
+
+        button:hover {
+            background: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .status-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            display: none; /* Hidden by default */
+        }
+
+        .status-message.success {
+            background: #d4edda;
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+
+        .status-message.error {
+            background: #f8d7da;
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+            input, textarea, button {
+                padding: 10px;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Gửi Email Liên Hệ</h2>
+        <form id="contact-form">
+            <div class="form-group">
+                <label for="name">Tên của bạn:</label>
+                <input type="text" id="name" name="from_name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email của bạn:</label>
+                <input type="email" id="email" name="from_email" required>
+            </div>
+            <div class="form-group">
+                <label for="subject">Chủ đề:</label>
+                <input type="text" id="subject" name="subject" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Nội dung tin nhắn:</label>
+                <textarea id="message" name="message" required></textarea>
+            </div>
+            <button type="submit" id="send-button">Gửi Email</button>
+            <div id="status-message" class="status-message"></div>
+        </form>
+    </div>
+
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.emailjs.com/sdk/2.3.2/email.min.js"></script>
+    <script type="text/javascript">
+        // Khởi tạo EmailJS với User ID của bạn
+        // Thay thế 'YOUR_USER_ID' bằng User ID của bạn từ trang EmailJS Dashboard -> Account -> API Keys
+        (function() {
+            emailjs.init("FTv8b_dsIphOTiJ24"); // User ID đã được cung cấp
+        })();
+
+        document.getElementById('contact-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Ngăn chặn form gửi đi theo cách mặc định
+
+            const sendButton = document.getElementById('send-button');
+            const statusMessage = document.getElementById('status-message');
+
+            // Hiển thị trạng thái đang gửi
+            statusMessage.style.display = 'block';
+            statusMessage.className = 'status-message'; // Reset class
+            statusMessage.textContent = 'Đang gửi email...';
+            sendButton.disabled = true; // Vô hiệu hóa nút gửi
+
+            // Gửi email
+            // Thay thế 'YOUR_SERVICE_ID' bằng ID dịch vụ Email của bạn (đã được điền: service_b9f810r)
+            // Thay thế 'YOUR_TEMPLATE_ID' bằng ID mẫu Email của bạn từ EmailJS dashboard.
+            // Để tạo mẫu, hãy truy cập EmailJS Dashboard -> Email Templates.
+            // Dán nội dung sau vào phần "Content" của mẫu email:
+            /*
+            A message by {{from_name}} has been received. Kindly respond at your earliest convenience.
+
+            👤
+            {{from_name}}
+            Thời gian: {{time}}
+            Nội dung tin nhắn: {{message}}
+            */
+            // Đảm bảo "Subject" của mẫu email cũng được thiết lập (ví dụ: "Thư liên hệ mới từ {{subject}}")
+            // Sau khi lưu mẫu, bạn sẽ thấy Template ID của nó. Hãy cập nhật vào đây.
+            emailjs.sendForm('service_b9f810r', 'template_igoaap8', this)
+                .then(function() {
+                    statusMessage.className = 'status-message success';
+                    statusMessage.textContent = 'Email đã được gửi thành công!';
+                    document.getElementById('contact-form').reset(); // Xóa các trường trong form
+                }, function(error) {
+                    statusMessage.className = 'status-message error';
+                    statusMessage.textContent = 'Gửi email thất bại. Lỗi: ' + JSON.stringify(error);
+                    console.error('Lỗi khi gửi email:', error);
+                })
+                .finally(function() {
+                    sendButton.disabled = false; // Kích hoạt lại nút gửi
+                });
+        });
+    </script>
+</body>
+</html>

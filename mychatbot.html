@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbox UI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles & Variables */
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --background-light: #f4f7f6;
+            --text-light: #333;
+            --chat-bg-light: #ffffff;
+            --user-msg-bg-light: #e0f2f1; /* Light teal */
+            --bot-msg-bg-light: #e9ecef; /* Light gray */
+            --border-color-light: #dee2e6;
+            --input-bg-light: #ffffff;
+
+            --background-dark: #2c3e50; /* Dark blue-gray */
+            --text-dark: #ecf0f1; /* Light gray for text */
+            --chat-bg-dark: #34495e; /* Darker blue-gray for chat area */
+            --user-msg-bg-dark: #1abc9c; /* Teal for user messages */
+            --bot-msg-bg-dark: #7f8c8d; /* Muted gray for bot messages */
+            --border-color-dark: #444;
+            --input-bg-dark: #222;
+
+            --shadow-light: rgba(0, 0, 0, 0.1);
+            --shadow-dark: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--background-light);
+            color: var(--text-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            background: var(--background-dark);
+            color: var(--text-dark);
+        }
+
+        body.dark-mode .chat-container {
+            background: var(--chat-bg-dark);
+            box-shadow: 0 8px 30px var(--shadow-dark);
+            border: 1px solid var(--border-color-dark);
+        }
+
+        body.dark-mode .chat-header {
+            background: var(--primary-color); /* Keep primary color for header */
+            color: white;
+            border-bottom: 1px solid var(--border-color-dark);
+        }
+
+        body.dark-mode .chat-messages .message.user {
+            background: var(--user-msg-bg-dark);
+            color: white;
+        }
+
+        body.dark-mode .chat-messages .message.bot {
+            background: var(--bot-msg-bg-dark);
+            color: var(--text-dark);
+        }
+
+        body.dark-mode .chat-input-area input[type="text"] {
+            background: var(--input-bg-dark);
+            border: 1px solid var(--border-color-dark);
+            color: var(--text-dark);
+        }
+
+        body.dark-mode .chat-input-area input[type="text"]::placeholder {
+            color: #bbb;
+        }
+
+        body.dark-mode .chat-input-area button {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Chat Container */
+        .chat-container {
+            width: 100%;
+            max-width: 450px; /* Standard chatbox width */
+            height: 70vh; /* Responsive height */
+            min-height: 400px;
+            background: var(--chat-bg-light);
+            border-radius: 15px;
+            box-shadow: 0 8px 30px var(--shadow-light);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid var(--border-color-light);
+            transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* Chat Header */
+        .chat-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        .chat-header button {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background 0.2s ease, border-color 0.2s ease;
+        }
+
+        .chat-header button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: white;
+        }
+
+        /* Chat Messages Area */
+        .chat-messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            scroll-behavior: smooth; /* Smooth scrolling for new messages */
+        }
+
+        /* Individual Message Styling */
+        .chat-messages .message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            line-height: 1.4;
+            word-wrap: break-word; /* Ensure long words wrap */
+        }
+
+        .chat-messages .message.user {
+            align-self: flex-end; /* Align user messages to the right */
+            background: var(--user-msg-bg-light);
+            color: var(--text-light);
+            border-bottom-right-radius: 2px; /* Pointy corner for user */
+        }
+
+        .chat-messages .message.bot {
+            align-self: flex-start; /* Align bot messages to the left */
+            background: var(--bot-msg-bg-light);
+            color: var(--text-light);
+            border-bottom-left-radius: 2px; /* Pointy corner for bot */
+        }
+
+        /* Chat Input Area */
+        .chat-input-area {
+            display: flex;
+            padding: 15px 20px;
+            border-top: 1px solid var(--border-color-light);
+            background: var(--chat-bg-light); /* Match chat background */
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            transition: border-top-color 0.3s ease, background 0.3s ease;
+        }
+
+        .chat-input-area input[type="text"] {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color-light);
+            border-radius: 25px; /* Rounded input field */
+            font-size: 1rem;
+            outline: none;
+            margin-right: 10px;
+            background: var(--input-bg-light);
+            color: var(--text-light);
+            transition: border-color 0.3s ease, background 0.3s ease, color 0.3s ease;
+        }
+
+        .chat-input-area input[type="text"]:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+        }
+
+        .chat-input-area button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 25px; /* Rounded button */
+            padding: 12px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
+        }
+
+        .chat-input-area button:hover {
+            background: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        .chat-input-area button:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .chat-container {
+                height: 95vh; /* Take more height on small screens */
+                border-radius: 10px;
+            }
+            .chat-header {
+                padding: 12px 15px;
+                font-size: 1.1rem;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+            }
+            .chat-messages {
+                padding: 15px;
+                gap: 8px;
+            }
+            .chat-messages .message {
+                padding: 8px 12px;
+                font-size: 0.95rem;
+            }
+            .chat-input-area {
+                padding: 10px 15px;
+            }
+            .chat-input-area input[type="text"] {
+                padding: 10px 12px;
+                font-size: 0.9rem;
+            }
+            .chat-input-area button {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <span>Trợ lý AI</span>
+            <button id="toggleTheme">Dark Mode</button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <!-- Initial messages (can be loaded dynamically) -->
+            <div class="message bot">Xin chào! Tôi có thể giúp gì cho bạn?</div>
+            <div class="message user">Chào bạn, tôi muốn hỏi về AI.</div>
+            <div class="message bot">Bạn có câu hỏi cụ thể nào về AI không?</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="messageInput" placeholder="Nhập tin nhắn của bạn...">
+            <button id="sendMessageButton">Gửi</button>
+        </div>
+    </div>
+
+    <script>
+        const chatMessages = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const sendMessageButton = document.getElementById('sendMessageButton');
+        const toggleThemeButton = document.getElementById('toggleTheme');
+
+        // Function to add a message to the chat
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender);
+            messageDiv.textContent = text;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll to the latest message
+        }
+
+        // Event listener for sending messages
+        sendMessageButton.addEventListener('click', () => {
+            const messageText = messageInput.value.trim();
+            if (messageText) {
+                addMessage(messageText, 'user');
+                messageInput.value = ''; // Clear input field
+
+                // Simulate bot response after a short delay
+                setTimeout(() => {
+                    addMessage('Cảm ơn tin nhắn của bạn! Tôi đang xử lý...', 'bot');
+                }, 500);
+            }
+        });
+
+        // Allow sending message with Enter key
+        messageInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                sendMessageButton.click();
+            }
+        });
+
+        // Theme Toggle functionality
+        toggleThemeButton.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const currentTheme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+            localStorage.setItem('theme', currentTheme);
+            toggleThemeButton.textContent = currentTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+        });
+
+        // Load theme preference on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+                toggleThemeButton.textContent = 'Light Mode';
+            } else {
+                toggleThemeButton.textContent = 'Dark Mode';
+            }
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom on load
+        });
+    </script>
+</body>
+</html>
