@@ -694,7 +694,7 @@
 
     <script>
         // Configuration
-        let API_KEY = 'REMOVED ';
+        let API_KEY = '';
         let conversations = [];
         let settings = {
             darkMode: true,
@@ -829,4 +829,11 @@
                 e.preventDefault();
                 imageUpload.classList.remove('drag-over');
                 const files = e.dataTransfer.files;
-                if (files.
+                if (files.length > 0) {
+                    // Handle image upload
+                }
+            });
+        }
+    </script>
+</body>
+</html>
